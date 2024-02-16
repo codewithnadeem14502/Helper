@@ -1,7 +1,21 @@
 import Image from "next/image";
 import styles from "./singlePost.module.css";
 
-const SinglePage = () => {
+import { Suspense } from "react";
+import PostUser from "@/components/PostUser/PostUser";
+
+const GetSinglePost = async (slug) => {
+  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${slug}`);
+
+  if (!res.ok) {
+    throw new Error("Something went wrong");
+  }
+  return res.json();
+};
+const SinglePage = async ({ params }) => {
+  const { slug } = params;
+  console.log("aaaaaaaa ", slug);
+  const singlePost = await GetSinglePost(slug);
   return (
     <div className={styles.container}>
       {/* {post.img && ( */}
@@ -15,14 +29,18 @@ const SinglePage = () => {
       </div>
       {/* )} */}
       <div className={styles.textContainer}>
-        <h1 className={styles.title}>Title</h1>
-        <div className={styles.detail}>
+        <h1 className={styles.title}>{singlePost.title}</h1>
+        {/* <div className={styles.detail}>
           <div className={styles.detailText}>
             <span className={styles.detailTitle}>Published</span>
             <span className={styles.detailValue}>value</span>
           </div>
-        </div>
-        <div className={styles.content}>decx</div>
+        </div> */}
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <PostUser userId={singlePost.userId} />
+        </Suspense>
+        <div className={styles.content}>{singlePost.body}</div>
       </div>
     </div>
   );
