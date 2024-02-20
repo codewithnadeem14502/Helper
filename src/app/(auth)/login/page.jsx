@@ -1,6 +1,8 @@
 "use client";
 
-import { signIn, useSession, signOut } from "next-auth/react";
+import { HandleGithubLogin } from "@/lib/action";
+import { useSession, signOut } from "next-auth/react";
+
 const LoginPage = async () => {
   const { data: status } = useSession();
 
@@ -11,9 +13,10 @@ const LoginPage = async () => {
       </div>
     );
   }
+
   return (
     <div>
-      <button onClick={() => signIn("github")}>Sign In</button>
+      <button onClick={HandleGithubLogin}>Sign In</button>
     </div>
   );
 };

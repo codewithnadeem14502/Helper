@@ -3,6 +3,7 @@ import styles from "./urls.module.css";
 import NavLinks from "./navLinks/NavLinks";
 import { useState } from "react";
 import Image from "next/image";
+import { HandleLogout } from "@/lib/action";
 const links = [
   {
     title: "Homepage",
@@ -21,10 +22,9 @@ const links = [
     path: "/blog",
   },
 ];
-const Urls = () => {
+const Urls = ({ session }) => {
   const [open, setOpen] = useState(false);
 
-  const session = false;
   const isAdmin = true;
   return (
     <div className={styles.container}>
@@ -34,8 +34,12 @@ const Urls = () => {
         ))}
         {session ? (
           <>
-            {isAdmin && <NavLinks items={{ title: "Admin", path: "/admin" }} />}
-            <button className={styles.logout}>Logout</button>
+            {session?.user.isAdmin && (
+              <NavLinks items={{ title: "Admin", path: "/admin" }} />
+            )}
+            <form action={HandleLogout}>
+              <button className={styles.logout}>Logout</button>
+            </form>
           </>
         ) : (
           <NavLinks items={{ title: "Login", path: "/login" }} />
